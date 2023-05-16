@@ -1,10 +1,54 @@
 # guitar2
 
-* Run the simulation
 
+* Μετατροπη step σε mesh
 
-Simulation runs by the following command:
+Η μετατροπή γίνεται με το gmsh
 
 #+begin_src sh
+gmsh
+#+end_src
+
+- Open file:
+  montagem-guitara.step
+
+  Οι εντολές περίπου είναι:
+
+  Geometry - Coherence
+
+  - Mesh - 3D
+  - Mesh - Optimize 3D
+  - Mesh - Refine Mesh
+  - Mesh - Optimize 3D
+  - Mesh - Refine Mesh
+  - Mesh - Optimize 3D
+  - Mesh - Optimize 3D
+  - Save
+
+    Αποθηκευεται ενα αρχείο .msh
+
+    Προαιρετικά export σε .inp για εξαγωγή στο abaqus
+    
+Μετατρεπετεται σε mesh για Elmer:
+#+begin_src sh
+ElmerGrid 14 2 montagem-guitara.msh -autoclean
+#+end_src
+
+* Solver
+
+Το μοντέλο βρίσκεται στο αρχείο case_it.sif, επεξεργάζεται σε notepad, για αλλαγες.
+
+Τα μοντέλο λύνεται με την εντολή
+#+begin_src sh
 ElmerSolver case_it.sif
+#+end_src
+
+* Ανάλυση
+
+Τα αρχεια εξαγονται στο φακελο resu, σε μορφή vtu.
+
+Επεξεργάζονται με το paraview.
+
+#+begin_src sh
+paraview
 #+end_src
