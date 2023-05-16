@@ -44,7 +44,7 @@ Solver 1
   Exec Solver = After saving
 End
 
-Solver 2                         !perform eigenmode analysis on wine glass structure
+Solver 2          
   Equation = Linear elasticity
 
   Linear System Save = Logical True
@@ -89,8 +89,8 @@ Equation 1
 End
 
 Material 1
-  Name = "Material 1"
+  Name = "Hard Mapple"
   Poisson ratio = 0.3
-  Youngs modulus = 197e9
-  Density = 7370
+  Youngs modulus = 12.62e9
+  Density = 520
 End
