@@ -1,0 +1,96 @@
+Header
+  CHECK KEYWORDS Warn
+  Mesh DB "." "./montagem-guitara/"
+  Include Path ""
+  Results Directory "./resu/"
+End
+
+Simulation
+  Max Output Level = 50
+  Coordinate System = Cartesian
+  Coordinate Mapping(3) = 1 2 3
+  Simulation Type = Steady state
+  Steady State Max Iterations = 1
+  Output File Final Only = Logical True
+  Solver Input File = case.sif
+  Post File = case.vtu
+End
+
+Constants
+  Gravity(4) = 0 -1 0 9.82
+  Stefan Boltzmann = 5.67e-08
+  Permittivity of Vacuum = 8.8542e-12
+  Boltzmann Constant = 1.3807e-23
+  Unit Charge = 1.602e-19
+End
+
+Body 1
+  Target Bodies(1) = 1
+  Name = "Body 1"
+  Equation = 1
+  Material = 1
+End
+
+Solver 1
+  Equation = Result Output
+  Procedure = "ResultOutputSolve" "ResultOutputSolver"
+  Single Precision = True
+  Binary Output = False
+  Output Format = Vtu
+  Vector Field 1 = displacement
+  Eigen Analysis = True
+  Output File Name = case
+  Save Linear Elements = True
+  Exec Solver = After saving
+End
+
+Solver 2                         !perform eigenmode analysis on wine glass structure
+  Equation = Linear elasticity
+
+  Linear System Save = Logical True
+  Linear System Save Slot = String "assembly"
+  Linear System Save Mass = Logical True
+  Use global mass matrix = Logical True
+  Linear System Save Perm = Logical True
+
+  Procedure = "StressSolve" "StressSolver"
+  Variable = -dofs 3 Displacement
+  Displace mesh = Logical False
+  Eigen System Select = Smallest magnitude
+  Eigen Analysis = Logical True
+  Eigen System Values = Integer 100
+  Exec Solver = Always
+  Stabilize = Logical True
+  Bubbles = Logical False
+  Lumped Mass Matrix = Logical False
+  Optimize Bandwidth = Logical True
+  Steady State Convergence Tolerance = Real 1.0e-5
+  Linear System Solver = Direct
+  Linear System Direct Method = Mumps
+  Linear system convergence tolerance = Real 1e-8
+End
+
+Solver 3 
+  Equation = SaveScalars
+  Procedure = "SaveData" "SaveScalars"
+  Filename = eigenfreq.dat
+! Show Norm = True
+! Show Norm Index = 1
+
+!  Variable 1 = Deflection
+  Save Eigenfrequencies = Logical True
+End
+
+
+Equation 1
+  Name = "Equation 1"
+  !Plane Stress = True
+  Active Solvers(3) = 1 2 3 
+End
+
+Material 1
+  Name = "Material 1"
+  Poisson ratio = 0.3
+  Youngs modulus = 197e9
+  Density = 7370
+End
