@@ -1,8 +1,8 @@
 Header
   CHECK KEYWORDS Warn
-  Mesh DB "." "."
+  Mesh DB "." "./13/"
   Include Path ""
-  Results Directory ""
+  Results Directory "./resu/"
 End
 
 Simulation
@@ -10,12 +10,12 @@ Simulation
   Coordinate System = Cartesian
   Coordinate Mapping(3) = 1 2 3
   Simulation Type = Steady state
-  Steady State Max Iterations = 1
+  Steady State Max Iterations = 5
   Output Intervals = 1
   Timestepping Method = BDF
   BDF Order = 1
   Solver Input File = case.sif
-  Post File = case.ep
+  !Post File = case.ep
 End
 
 Constants
@@ -28,10 +28,27 @@ End
 
 Body 1
   Target Bodies(1) = 1
-  Name = "Body 1"
+  Name = "chord"
   Equation = 1
   Material = 1
 End
+
+
+Body 2
+  Target Bodies(1) = 2
+  Name = "air"
+  Equation = 1
+  Material = 2
+End
+
+
+Body 3
+  Target Bodies(1) = 3
+  Name = "guitar"
+  Equation = 1
+  Material = 1
+End
+
 
 Solver 1
   Equation = Result Output
@@ -51,17 +68,19 @@ Nonlinear Update Exported Variables = Logical True
   Exec Solver = Always
   Stabilize = True
   Bubbles = False
-  Lumped Mass Matrix = False
+  Lumped Mass Matrix = True
   Optimize Bandwidth = True
   Steady State Convergence Tolerance = 1.0e-5
   Nonlinear System Convergence Tolerance = 1.0e-7
-  Nonlinear System Max Iterations = 20
+  Nonlinear System Max Iterations = 200
   Nonlinear System Newton After Iterations = 3
   Nonlinear System Newton After Tolerance = 1.0e-3
   Nonlinear System Relaxation Factor = 1
-  Linear System Solver = Iterative
-  Linear System Iterative Method = BiCGStab
-  Linear System Max Iterations = 500
+  !Linear System Solver = Iterative
+  !Linear System Iterative Method = BiCGStab
+  Linear System Solver = Mumps
+  Linear System Solver = Direct
+  Linear System Max Iterations = 50000
   Linear System Convergence Tolerance = 1.0e-10
   BiCGstabl polynomial degree = 2
   Linear System Preconditioning = Diagonal
@@ -73,36 +92,56 @@ End
 
 Equation 1
   Name = "Equation 1"
-  Angular Frequency = Real MATC "2*pi*100"
+  Angular Frequency = Real MATC "2*pi*80"
   Active Solvers(2) = 1 2
 End
 
 Material 1
-  Name = "Air (room temperature)"
+  Name = "mahagony"
+  Relative Permeability = 6.00000037
+  Heat Conductivity = 0.0257
+  Heat Capacity = 1005.0
+  Relative Permittivity = 6.00059
+  Relative Permeability = 6.00000037
+  Viscosity = 1.983e-2
+  Viscosity = 1.983e-2
+  Sound speed = 343.0
+  Heat expansion Coefficient = 3.43e-3
+  Relative Permittivity = 6.00059
+  Porosity Model = Always saturated
+  Relative Permittivity = 6.00059
+  Density = 520
+  Relative Permeability = 6.00000037
+End
+
+Material 2
+  Name = "air"
   Relative Permeability = 1.00000037
   Heat Conductivity = 0.0257
   Heat Capacity = 1005.0
   Relative Permittivity = 1.00059
   Relative Permeability = 1.00000037
-  Viscosity = 1.983e-5
-  Viscosity = 1.983e-5
+  Viscosity = 1.983e-2
+  Viscosity = 1.983e-2
   Sound speed = 343.0
   Heat expansion Coefficient = 3.43e-3
   Relative Permittivity = 1.00059
   Porosity Model = Always saturated
   Relative Permittivity = 1.00059
-  Density = 1.205
+  Density = 1
   Relative Permeability = 1.00000037
 End
 
+
+
 Boundary Condition 1
-  Target Boundaries(1) = 3 
+  Target Boundaries(9) = 3 4 6 40 35 37 38 33 18
   Name = "SPEAKER"
-  Wave Flux 1 = 1
+  Wave Flux 1 = 10000
 End
 
 Boundary Condition 2
-  Target Boundaries(1) = 2 
+  Target Boundaries(7) = 7 10 11 13 8 9 1
   Name = "OPEN"
-  Wave impedance 1 = 340
+  Wave impedance 1 = 34
 End
